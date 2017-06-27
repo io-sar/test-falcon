@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text = "${title}"></title>
+</head>
+<body>
+<h1 th:text = "${wlc}"></h1>
+<form method="post">
+    <div>
+        <label>Name</label>
+        <input type="text" name="name" />
+    </div>
+    <div>
+        <label>Content</label>
+        <input type="text" name="content" />
+    </div>
+    <input type="submit" value="Save User" /><br />
+    Check the users <a href="/dummy/show">here</a>
+</form>
+</body>
+</html>
