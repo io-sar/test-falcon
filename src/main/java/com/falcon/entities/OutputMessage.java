@@ -8,11 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Created by bagasas on 25/6/2017.
+ * Created by bagasas on 28/6/2017.
  */
-
 @Entity
-public class Dummy {
+public class OutputMessage {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -20,10 +19,19 @@ public class Dummy {
 
     @NotNull
     @Size(min=1, max=15, message = "Name must not be empty")
-    private  String name;
+    private String name;
 
-    @NotNull
-    private  String content;
+    private String message;
+
+    private String timestamp;
+
+    public OutputMessage(){}
+
+    public OutputMessage(final String name, final String message, final String timestamp) {
+        this.name = name;
+        this.message = message;
+        this.timestamp = timestamp;
+    }
 
     public long getId() {
         return id;
@@ -33,15 +41,12 @@ public class Dummy {
         return name;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

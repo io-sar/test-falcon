@@ -6,16 +6,15 @@
 </head>
 <body>
 <h1 th:text = "${wlc}"></h1>
+Return to main, <a href="/">here</a><br />
 <table>
     <tr>
         <th>Id</th>
         <th>Name</th>
-        <th>content</th>
     </tr>
     <tr th:each="dummy : ${dummies}">
         <td th:text="${dummy.id}"></td>
         <td th:text="${dummy.name}"></td>
-        <td th:text="${dummy.content}"></td>
     </tr>
 </table>
 <p th:unless="${dummies} and ${dummies.size()}"> There are no users in the db</p>

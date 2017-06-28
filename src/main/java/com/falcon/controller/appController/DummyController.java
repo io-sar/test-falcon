@@ -1,6 +1,8 @@
 package com.falcon.controller.appController;
 
 import com.falcon.controller.dataController.EntityDao;
+import com.falcon.entities.InputDummy;
+import com.falcon.entities.OutputMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,19 +10,20 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.falcon.entities.Dummy;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Created by bagasas on 25/6/2017.
+ * Created by io-sar on 25/6/2017.
  */
 @Controller
-@RequestMapping("dummy")
 public class DummyController {
 
     @Autowired
     private EntityDao entityDao;
 
-    //index welcome form
+    //Index welcome form
     @RequestMapping(value = "")
     public String index(Model model){
         model.addAttribute("title", "Falcon test");
@@ -29,68 +32,44 @@ public class DummyController {
         return "dummy/index";
     }
 
-    //add item form, sends post request to the page
+    //Add item form, sends post request to the page
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String addDummyform(Model model){
-        model.addAttribute("title", "Falcon test");
-        model.addAttribute("wlc", "Add a user");
+    public String chatForm(Model model){
+        model.addAttribute("title", "Chat group");
+        model.addAttribute("wlc", "Set user name and chat");
 
         return "dummy/add";
     }
 
-
-
-    //receives the post request and saves to db
-    @RequestMapping(value = "add",  method = RequestMethod.POST)
-    public String saveToDb (
-            @RequestParam(value = "name", required=false, defaultValue="Default Dev") String name,
-            @RequestParam(value = "content",  required=false, defaultValue="Default Hello world") String content
-    ){
-        Dummy dummy = new Dummy();
-        dummy.setContent(content + name);
-        dummy.setName(name);
-        entityDao.save(dummy);
-
-        return "redirect:add";
-    }
-
-    @MessageMapping(value = "add")
-    @SendTo(value = "server")
-    public Dummy dummySender(
-            @RequestParam(value = "name", required=false, defaultValue="Default Dev") String name,
-            @RequestParam(value = "content",  required=false, defaultValue="Default Hello world") String content
-    ) throws Exception {
-        Thread.sleep(1000); // simulated delay
-        Dummy dummy = new Dummy();
-        dummy.setContent(content + name);
-        dummy.setName(name);
-
-        return dummy;
-    }
-
-    //form to show the items into the db
+    //Form to show the items in the db
     @RequestMapping(value = "show")
-    public String showDummies(Model model){
+    public String showDB(Model model){
 
-        model.addAttribute("title", "Falcon test");
-        model.addAttribute("wlc", "Show users");
-        model.addAttribute("dummies", entityDao.findAll());
+        model.addAttribute("title", "Message List");
+        model.addAttribute("wlc", "Show messages");
+        model.addAttribute("messages", entityDao.findAll());
 
         return "dummy/show";
     }
 
+    //Endpoint that sends messages and saves to db the message
+    @MessageMapping("/ws")
+    @SendTo("/server/messages")
+    public OutputMessage messageOutput(InputDummy dummy) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        OutputMessage message = new OutputMessage(dummy.getName(),dummy.getMessage(), time);
+        entityDao.save(message);
 
-    //form to show the jsonlist
-    @RequestMapping(value = "/jsonlist", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Iterable<Dummy> jsonlist(){
-
-        return entityDao.findAll();
+        return message;
     }
 
-    @RequestMapping(value = "server")
-    public String server (){
-        return "dummy/websocket";
+    //Form that returns the db items as json
+    @RequestMapping(value = "/jsonlist", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Iterable<OutputMessage> showJsonlist(){
+
+        return entityDao.findAll();
     }
 
 
