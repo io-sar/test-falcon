@@ -15,3 +15,6 @@
 * Connect to the server
 * Write a message
 * Press Send (Note. The server has 1 sec delay to make the message appear)
+
+### Future ###
+* Missing tests
