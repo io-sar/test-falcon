@@ -3,6 +3,8 @@ package com.falcon.controller.appController;
 import com.falcon.controller.dataController.EntityDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,8 @@ public class DummyController {
         return "dummy/add";
     }
 
+
+
     //receives the post request and saves to db
     @RequestMapping(value = "add",  method = RequestMethod.POST)
     public String saveToDb (
@@ -48,6 +52,20 @@ public class DummyController {
         entityDao.save(dummy);
 
         return "redirect:add";
+    }
+
+    @MessageMapping(value = "add")
+    @SendTo(value = "server")
+    public Dummy dummySender(
+            @RequestParam(value = "name", required=false, defaultValue="Default Dev") String name,
+            @RequestParam(value = "content",  required=false, defaultValue="Default Hello world") String content
+    ) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        Dummy dummy = new Dummy();
+        dummy.setContent(content + name);
+        dummy.setName(name);
+
+        return dummy;
     }
 
     //form to show the items into the db
@@ -68,6 +86,11 @@ public class DummyController {
     public Iterable<Dummy> jsonlist(){
 
         return entityDao.findAll();
+    }
+
+    @RequestMapping(value = "server")
+    public String server (){
+        return "dummy/websocket";
     }
 
 
