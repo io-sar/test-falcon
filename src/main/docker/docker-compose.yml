@@ -1,7 +1,7 @@
 app:
   build: ./app
   ports:
-    - "8081:8080"
+    - "8080:8080"
   links:
     - db
 
