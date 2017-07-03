@@ -16,5 +16,12 @@
 * Write a message
 * Press Send (Note. The server has 1 sec delay to make the message appear)
 
+### Docker ###
+* Build the app
+* Move to the build/docker directory
+* Run "docker-compose up -d"
+##### note #####
+I wasn't able to check the connection between the postgresql container and the app container because I was running the docker into a VM from my windows machine. The app currently does't work as intended from the docker machine since the "localhost" wont be mapped correctly.
+
 ### Future ###
 * Missing tests
