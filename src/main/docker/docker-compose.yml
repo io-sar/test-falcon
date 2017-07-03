@@ -1,0 +1,11 @@
+app:
+  build: ./app
+  ports:
+    - "8081:8080"
+  links:
+    - db
+
+db:
+  build: ./db
+  expose:
+    - "5432"
