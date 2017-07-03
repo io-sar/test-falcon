@@ -19,9 +19,9 @@
 ### Docker ###
 * Build the app
 * Move to the build/docker directory
-* Run "docker-compose up -d"
+* Run "docker-compose up"
 ##### note #####
-I wasn't able to check the connection between the postgresql container and the app container because I was running the docker into a VM from my windows machine. The app currently does't work as intended from the docker machine since the "localhost" wont be mapped correctly.
+app runs on docker where ever the container is, it doesnt run in the local machine
 
 ### Future ###
 * Missing tests
